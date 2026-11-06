@@ -43,7 +43,7 @@ namespace HelloWorld
 
 
 
-///////////// task 2,3,4
+///////////// task 2,3,4,5,6
 
 
 
@@ -59,7 +59,7 @@ namespace HelloWorld
         Console.WriteLine("========== BANK MENU ==========");
         Console.WriteLine("1. check balance");
         Console.WriteLine("2. deposit money");
-        Console.WriteLine("3. widtraw money");
+        Console.WriteLine("3. withdraw money");
         Console.WriteLine("4. view transaction summary");
         Console.WriteLine("5. Exit");
         Console.Write("Choose an option : ");
@@ -83,7 +83,7 @@ namespace HelloWorld
             throw new ArgumentOutOfRangeException(nameof(amount) , "Amount must be greater than zero");
         }
     if(amount > balance){
-        throw new InvalidOperationException("amount must be less than balance");
+        throw new InvalidOperationException("Insufficient funds");
     }
         balance -= amount ;
     }
@@ -114,19 +114,17 @@ namespace HelloWorld
             // }
             
         }
-    static void Main(string[] args){
-        decimal balance = 1000;  
-        int depositCount = 0, withdrawCount = 0;
-        decimal totalDeposited = 0, totalWithdrawn = 0;
-        bool run = true;
-        
-        while(run){
-        int choice = ShowMenue() ;
-        switch(choice) {
-            case 1 : 
-                DisplayBalance(balance);
-                break ;
-            case 2 : 
+        static void DisplayTransactionSummary(int depositCount, int withdrawCount,decimal totalDeposited, decimal totalWithdrawn,decimal balance)
+        {
+            Console.WriteLine("====== TRANSACTION SUMMARY ======");
+            Console.WriteLine($"Successful Deposits:    {depositCount}");
+            Console.WriteLine($"Successful Withdrawals: {withdrawCount}");
+            Console.WriteLine($"Total Deposited: {totalDeposited} EGP");
+            Console.WriteLine($"Total Withdrawn:  {totalWithdrawn} EGP");
+            Console.WriteLine($"Current Balance: {balance} EGP");
+        }
+        static void depositHandle(ref decimal balance , ref decimal totalDeposited , ref int depositCount)
+        {
             try{
                 decimal amount ;
                     Console.WriteLine($"Current Balance: {balance} EGP");
@@ -151,9 +149,9 @@ namespace HelloWorld
             }
                 
                 Console.WriteLine("Returning to main menu......");
-                break ;
-                
-            case 3 : 
+        }
+        static void widtrawHandle(ref decimal balance , ref int withdrawCount , ref decimal totalWithdrawn)
+        {
             try{
                 decimal amountt ;
                 
@@ -170,21 +168,43 @@ namespace HelloWorld
             }
             catch(ArgumentOutOfRangeException ex){
                  Console.WriteLine($"Error: {ex.Message}");
+            }                                   // ليا 2 بونص هناااااااااا       
+            catch(InvalidOperationException ex) when(ex.Message=="Insufficient funds")
+            {
+                 Console.WriteLine("Withdrawal rejected: Insufficient funds .");
             }
-            catch(InvalidOperationException ex){
-                 Console.WriteLine($"Error: {ex.Message}");
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
+
             finally{
                 Console.WriteLine("Transaction attempt completed.");
             }
                 
                 Console.WriteLine("Returning to main menu......");
+        }
+    static void Main(string[] args){
+        decimal balance = 1000;  
+        int depositCount = 0, withdrawCount = 0;
+        decimal totalDeposited = 0, totalWithdrawn = 0;
+        bool run = true;
+        
+        while(run){
+        int choice = ShowMenue() ;
+        switch(choice) {
+            case 1 : 
+                DisplayBalance(balance);
+                break ;
+            case 2 : 
+                depositHandle(ref balance, ref totalDeposited, ref depositCount);
+                break ;
+                
+            case 3 : 
+                widtrawHandle(ref balance, ref withdrawCount, ref totalWithdrawn);
                 break ;
             case 4 : 
-                Console.WriteLine("--- Transaction Summary ---");
-                Console.WriteLine($"Deposits:    {depositCount} (Total: {totalDeposited} EGP)");
-                Console.WriteLine($"Withdrawals: {withdrawCount} (Total: {totalWithdrawn} EGP)");
-                DisplayBalance(balance);
+                DisplayTransactionSummary(depositCount, withdrawCount, totalDeposited, totalWithdrawn, balance);
                 break ;
             case 5 : 
                 Console.WriteLine("thank you for useing our machine Bank ");
@@ -198,4 +218,5 @@ namespace HelloWorld
     }
     
     }
+}
 }
