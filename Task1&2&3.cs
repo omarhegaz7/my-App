@@ -1,4 +1,54 @@
+/////// task 1 
+using System;
+namespace HelloWorld
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.Write("Enter your name: ");
+      string name = Console.ReadLine();  
+      decimal balance ;
+      while(true){
+         Console.Write("Enter initial balance: ");
+          string input = Console.ReadLine();
+          if(!decimal.TryParse(input , out balance))
+          { Console.WriteLine("Invalid balance, try again ");
+                continue;}
+          if(balance<0){
+               Console.WriteLine("Balance cannot be negative, try again");
+              continue ; 
+          }
+          break ;
+      }
+        Console.WriteLine($"Account created successfully! balance : {balance} EGP");
+		while (true){
+		 Console.WriteLine("Enter your age :  ");
+        try{
+            int age = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine($"your age is :  {age}");
+			break ;
+        }
+        catch(FormatException){
+            Console.WriteLine("Invalid age please enter a numper");
+        }
+		}
+       
+        
+        
+        
+    }}
+  }
+
+
+
+
 ///////////// task 2,3,4
+
+
+
+
+
 using System;
 using System.Data;
 namespace HelloWorld
