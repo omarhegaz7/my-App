@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 namespace HelloWorld
 {
   class Program
@@ -27,21 +28,35 @@ namespace HelloWorld
     static void DisplayBalance(decimal balance){
         Console.WriteLine($"Your current balance is : {balance}");
     }
-    static decimal ReadAmount(){
-        decimal amount ;
-        while(true){
-            Console.WriteLine("Enter amount : ");
-            if(!decimal.TryParse(Console.ReadLine(),out amount)){
-                Console.WriteLine("please enter number");
-                continue ;
+    // static decimal ReadAmount(){
+    //     decimal amount ;
+    //     while(true){
+    //         Console.WriteLine("Enter amount : ");
+    //         if(!decimal.TryParse(Console.ReadLine(),out amount)){
+    //             Console.WriteLine("please enter number");
+    //             continue ;
+    //         }
+    //         if(amount<=0){
+    //             Console.Write("amount cannot be 0 , please enter a valid number");
+    //             continue ;
+    //         }
+    //         return amount ;
+    //     }
+    // }
+    static bool TryReadAmount(string input , out decimal amount)
+        {
+            if(!decimal.TryParse(input,out amount))
+            {
+                Console.WriteLine("please enter a number") ;
+                return false ;
             }
-            if(amount<=0){
-                Console.Write("amount cannot be 0 , please enter a valid number");
-                continue ;
+            if(amount < 0)
+            {
+                return false ;
+                Console.WriteLine("please enter a positive number") ;
             }
-            return amount ;
+            return true ;
         }
-    }
     static void Main(string[] args){
         decimal balance = 1000;  
         int depositCount = 0, withdrawCount = 0;
@@ -55,19 +70,41 @@ namespace HelloWorld
                 DisplayBalance(balance);
                 break ;
             case 2 : 
-                decimal amount =  ReadAmount();
-                Deposite(ref balance , amount);
-                 depositCount++;
-                 totalDeposited += amount;
+                decimal amount ;
+                while(true){
+                    Console.Write("enter deposite amount : ");
+                    if(TryReadAmount(Console.ReadLine(), out amount))
+                        {
+                            Deposite(ref balance , amount);
+                            depositCount++;
+                            totalDeposited += amount;
+                            Console.WriteLine("Succesfully deposite amount .");
+                            break ;
+                        }
+                }
                 break ;
+                
+                
             case 3 : 
-                decimal amountt =  ReadAmount();
-                if(amountt > balance ){
-                    Console.WriteLine("Insufficient balance.");
-                }else{
-                    Withdraw(ref balance , amountt);
-                    withdrawCount++;
-                    totalWithdrawn += amountt;
+                decimal amountt ;
+                while(true){
+                    Console.Write("enter withdraw amount : ");
+                    if(TryReadAmount(Console.ReadLine(), out amountt))
+                        {
+                                if (amountt > balance)
+                                {
+                                    Console.WriteLine("amount is bigger than balance , please try again .");
+                                }
+                                else
+                                {
+                                    Withdraw(ref balance , amountt);
+                                    withdrawCount++;
+                                    totalWithdrawn += amountt;
+                                    Console.WriteLine("Succesfully Withdraw amount .");
+                                    break ;
+                                }
+                            
+                        }
                 }
                 break ;
             case 4 : 
